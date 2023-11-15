@@ -10,4 +10,6 @@
 - *Использование RAM*
 - *Активность процессора*
 
+## Скриншот работы программы
 
+![rNzjmjpixAE](https://github.com/veerveera/test_emae/assets/78911323/ce789fcc-718f-476e-bbe5-ea36f738271a)
