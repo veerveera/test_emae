@@ -92,11 +92,14 @@ def main():
             keyboard.send('esc')
             break
     print("Wait other threads")
-    mouse_thread.join()
+    mouse.Listener.stop()
+    #mouse_thread.join()
     print("MouseHandler Finished")
     keyboard_thread.join()
     print("KeyboardHandler Finished")
     print("Exit Program")
 
+
 if __name__ == "__main__":
+    print("For exit click the 'esc'")
     main()
