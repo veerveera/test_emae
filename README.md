@@ -12,4 +12,5 @@
 
 ## Скриншот работы программы
 
-![rNzjmjpixAE](https://github.com/veerveera/test_emae/assets/78911323/ce789fcc-718f-476e-bbe5-ea36f738271a)
+![Screenshot_3](https://github.com/veerveera/test_emae/assets/78911323/601bce25-b3bc-4232-b0da-9c03385506f1)
+
