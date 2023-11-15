@@ -16,6 +16,7 @@ MOUSE_IDLE_TIME_THRESHOLD = 0.5
 hotkeys_using_amount = 0
 mouse_using_time = 0
 mouse_idle_time = 0
+stop_threads_event = Event()
 
 
 def update_csv():
@@ -37,21 +38,24 @@ def handle_hotkey():
 def run_keyboard_handler():
     for hotkey in HOTKEYS:
         keyboard.add_hotkey(hotkey, handle_hotkey)
-    keyboard.wait()
+    keyboard.wait('esc')
+    stop_threads_event.set()
 
 
 def on_mouse_action(*args, **kwargs):
     global mouse_idle_time
     mouse_idle_time = 0
+    if stop_threads_event.is_set():
+        return False
 
 
 def run_mouse_handler():
     listener = mouse.Listener(
         on_move=on_mouse_action,
         on_click=on_mouse_action,
-        on_scroll=on_mouse_action,
-        deamon=True)
+        on_scroll=on_mouse_action)
     listener.start()
+    return listener
 
 
 def main():
@@ -64,11 +68,11 @@ def main():
     keyboard_thread.start()
 
     print("Start MouseHandler")
-    run_mouse_handler()
+    mouse_thread = run_mouse_handler()
 
     timer = 0
     LOOP_DELAY = 0.05
-    while True:
+    while not stop_threads_event.is_set():
         try:
             if timer >= CSV_WRITER_DELAY:
                 timer = 0
@@ -83,8 +87,15 @@ def main():
             if mouse_idle_time < MOUSE_IDLE_TIME_THRESHOLD:
                 mouse_using_time += LOOP_DELAY
             time.sleep(LOOP_DELAY)
-        except Exception:
+        except KeyboardInterrupt:
+            stop_threads_event.set()
+            keyboard.send('esc')
             break
+    print("Wait other threads")
+    mouse_thread.join()
+    print("MouseHandler Finished")
+    keyboard_thread.join()
+    print("KeyboardHandler Finished")
     print("Exit Program")
 
 if __name__ == "__main__":
